@@ -1,2 +1,3 @@
-# bot_crawl_data_from_skype_group
-Lập lịch chạy script ghi vào sheets định kỳ
+# Bot crawl data from skype group
+
+Lưu tin nhắn group skype vào sheets
