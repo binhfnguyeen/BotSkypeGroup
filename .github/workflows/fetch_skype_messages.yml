@@ -1,41 +1,31 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Fetch Skype Group Messages
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   schedule:
-  - cron: '0 1 * * *'
+    - cron: '0 1 * * *'  # Chạy mỗi ngày lúc 1 AM UTC
+  workflow_dispatch:  # Cho phép chạy thủ công từ tab Actions
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - id: repo
-          name: Fetch Skype Messages
-          uses: actions/checkout@v4
+      # Bước 1: Checkout repository
+      - name: Fetch repository
+        uses: actions/checkout@v4
 
-      - id: python
-          name: Python Setup & Packages Installation
-          uses: actions/setup-python@v5
-          with:
-            python-version: '3.13'
-            cache: 'pip' # caching pip dependencies
+      # Bước 2: Cài đặt môi trường Python và các thư viện cần thiết
+      - name: Python Setup & Packages Installation
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'  # caching pip dependencies
 
+      # Bước 3: Cài đặt các thư viện từ requirements.txt
       - run: pip install -r requirements.txt
 
-      - id: jupyter
-          name: Jupyter Notebook Execution
-          uses: actions/checkout@v4
-          run: jupyter execute heulwen-bot_crawl_data_from_skype_group.ipynb
-          shell: bash
+      # Bước 4: Chạy Jupyter notebook
+      - name: Execute Jupyter notebook
+        run: |
+          jupyter nbconvert --to notebook --execute heulwen-bot_crawl_data_from_skype_group.ipynb
+        shell: bash
