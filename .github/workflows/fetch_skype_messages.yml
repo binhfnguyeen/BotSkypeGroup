@@ -21,11 +21,12 @@ jobs:
 
       - run: pip install -r requirements.txt
 
-      - name: Set up Google credentials
-        run: |
-          echo "${{ secrets.GOOGLE_SERVICE_ACCOUNT }}" > account.json
+      - name: Run Python script
+        env: 
+          USERNAME: ${{ secrets.USERNAME }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          SKYPE_GROUP_ID: ${{ secrets.SKYPE_GROUP_ID }}
+          GOOGLE_SHEET_URL: ${{ secrets.GOOGLE_SHEET_URL }}
+          GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
+        run: python main.py
 
-      - name: Execute Jupyter notebook
-        run: |
-          jupyter nbconvert --to notebook --execute heulwen-bot_crawl_data_from_skype_group.ipynb
-        shell: bash

@@ -1,16 +1,18 @@
-USERNAME = 'tech07.qtdata@gmail.com'
-PASSWORD = 'Tech@bot1234'
-
-SKYPE_GROUP_ID = '19:7708c18fc9294263ae3c907a0b555226@thread.skype'
-GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1CJhSkKmxfFFFxWGVEb8xxyvzWAPbl6Z9V99dK-iSiwg/edit?usp=sharing'
-
 from skpy import Skype, SkypeMsg, SkypeSingleChat, SkypeGroupChat
 from datetime import datetime, timedelta
 import gspread
 import pandas as pd
 from google.auth import default
+import json
 import pytz
 import re
+import os
+
+USERNAME = os.getenv("USERNAME")
+PASSWORD = os.getenv("PASSWORD")
+SKYPE_GROUP_ID = os.getenv("SKYPE_GROUP_ID")
+GOOGLE_SERVICE_ACCOUNT = os.getenv("GOOGLE_SERVICE_ACCOUNT")
+GOOGLE_SHEET_URL = os.getenv("GOOGLE_SHEET_URL")
 
 
 def convert_time(time):
@@ -26,8 +28,9 @@ def update_spreadsheet(df, spreadsheet_url=None):
     if spreadsheet_url is None:
         spreadsheet_url = GOOGLE_SHEET_URL
 
-    gc = gspread.service_account(filename=fr"test07-dataqt.json")
-
+    service_account_info = json.loads(GOOGLE_SERVICE_ACCOUNT)
+    gc = gspread.service_account_from_dict(service_account_info)
+    
     google_sheet = gc.open_by_url(spreadsheet_url)
     # print('sheetname',sheetname)
     sh = google_sheet.get_worksheet(0)
