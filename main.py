@@ -33,6 +33,9 @@ def update_spreadsheet(df, spreadsheet_url=None):
 
     google_sheet = gc.open_by_url(spreadsheet_url)
     # print('sheetname',sheetname)
+    
+    today_str = datetime.now(pytz.timezone('Asia/Ho_Chi_Minh')).strftime('%Y-%m-%d')
+
     try:
         # Check worksheet already exists
           sh = google_sheet.worksheet(today_str)
