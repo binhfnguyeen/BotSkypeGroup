@@ -30,10 +30,15 @@ def update_spreadsheet(df, spreadsheet_url=None):
 
     service_account_info = json.loads(GOOGLE_SERVICE_ACCOUNT)
     gc = gspread.service_account_from_dict(service_account_info)
-    
+
     google_sheet = gc.open_by_url(spreadsheet_url)
     # print('sheetname',sheetname)
-    sh = google_sheet.get_worksheet(0)
+    try:
+        # Check worksheet already exists
+          sh = google_sheet.worksheet(today_str)
+    except gspread.exceptions.WorksheetNotFound:
+        # If worksheet doesn't exist, create a new one
+        sh = google_sheet.add_worksheet(title=today_str, rows="1000", cols="10")
 
     str_list = list(filter(None, sh.col_values(1)))
     index_first_empty_row = len(str_list) + 1
