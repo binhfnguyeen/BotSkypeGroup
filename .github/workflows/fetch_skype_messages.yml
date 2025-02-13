@@ -11,7 +11,7 @@ on:
 
   schedule:
     - cron: '0 * * * *'
-    
+
   workflow_dispatch:
 
 jobs:
@@ -35,6 +35,7 @@ jobs:
           USERNAME: ${{ secrets.USERNAME }}
           PASSWORD: ${{ secrets.PASSWORD }}
           SKYPE_GROUP_ID: ${{ secrets.SKYPE_GROUP_ID }}
+          SKYPE_GROUP_ID2: ${{ secrets.SKYPE_GROUP_ID2 }}
           GOOGLE_SHEET_URL: ${{ secrets.GOOGLE_SHEET_URL }}
           GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
         run: python main.py

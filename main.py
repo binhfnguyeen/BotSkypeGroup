@@ -11,6 +11,7 @@ import os
 USERNAME = os.getenv("USERNAME")
 PASSWORD = os.getenv("PASSWORD")
 SKYPE_GROUP_ID = os.getenv("SKYPE_GROUP_ID")
+SKYPE_GROUP_ID2 = os.getenv("SKYPE_GROUP_ID2")
 GOOGLE_SERVICE_ACCOUNT = os.getenv("GOOGLE_SERVICE_ACCOUNT")
 GOOGLE_SHEET_URL = os.getenv("GOOGLE_SHEET_URL")
 
@@ -24,7 +25,7 @@ def clean_message(content):
     return re.sub(r"<[^>]+>", "", content)
 
 
-def update_spreadsheet(df, spreadsheet_url=None):
+def update_spreadsheet(df, sheet_name, spreadsheet_url=None):
     if spreadsheet_url is None:
         spreadsheet_url = GOOGLE_SHEET_URL
 
@@ -33,20 +34,29 @@ def update_spreadsheet(df, spreadsheet_url=None):
     
     google_sheet = gc.open_by_url(spreadsheet_url)
     # print('sheetname',sheetname)
-    sh = google_sheet.get_worksheet(0)
 
-    str_list = list(filter(None, sh.col_values(1)))
-    index_first_empty_row = len(str_list) + 1
+    try:
+        sh = google_sheet.worksheet(sheet_name)
+    except gspread.exceptions.WorksheetNotFound:
+        sh = google_sheet.add_worksheet(title=sheet_name, rows=1000, cols=10)
+
+    # Overwrite old data
+    sh.clear()
+    sh.update(values=[df.columns.values.tolist()] + df.values.tolist())
+
+    # sh = google_sheet.get_worksheet(0)
+    # str_list = list(filter(None, sh.col_values(1)))
+    # index_first_empty_row = len(str_list) + 1
     # print('index_first_empty_row',index_first_empty_row)
     # if spreadsheet is empty, which mean first empty row's index = 1
-    if index_first_empty_row == 1:  # logic here
-        # update data along with header
-        sh.update(values=[df.columns.values.tolist()] + df.values.tolist())
-    else:
-        end_index = index_first_empty_row + df.shape[0] - 1
-        print('end_index', end_index)
-        # only insert new row
-        sh.update(range_name=f'A{index_first_empty_row}:D{end_index}', values=df.values.tolist())
+    # if index_first_empty_row == 1:  # logic here
+    #     # update data along with header
+    #     sh.update(values=[df.columns.values.tolist()] + df.values.tolist())
+    # else:
+    #     end_index = index_first_empty_row + df.shape[0] - 1
+    #     print('end_index', end_index)
+    #     # only insert new row
+    #     sh.update(range_name=f'A{index_first_empty_row}:D{end_index}', values=df.values.tolist())
 
 
 group_topic = ""
@@ -67,6 +77,7 @@ def get_group_message(group_id, num_day=2, sorted=False, update=False):
 
     channel = sk.chats[group_id]
     group_topic = channel.topic
+    sheet_name = group_topic[:2]
     print('Group topic: ', group_topic)
 
     date_temp = cur_date
@@ -109,10 +120,12 @@ def get_group_message(group_id, num_day=2, sorted=False, update=False):
     df_data = df_data[~df_data['CONTENT'].str.startswith('<')]
 
     if update is True:
-        update_spreadsheet(df=df_data)
+        update_spreadsheet(df=df_data, sheet_name=sheet_name)
 
     return df_data
 
 if __name__ == '__main__':
     df = get_group_message(group_id=SKYPE_GROUP_ID, num_day=1, sorted=True, update=True)
+    df2 = get_group_message(group_id=SKYPE_GROUP_ID2, num_day=1, sorted=True, update=True)
     df
+    df2
