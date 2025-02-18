@@ -40,23 +40,29 @@ def update_spreadsheet(df, sheet_name, spreadsheet_url=None):
     except gspread.exceptions.WorksheetNotFound:
         sh = google_sheet.add_worksheet(title=sheet_name, rows=1000, cols=10)
 
-    # Overwrite old data
-    sh.clear()
-    sh.update(values=[df.columns.values.tolist()] + df.values.tolist())
+    # Lấy toàn bộ dữ liệu của sheets
+    existing_data = sh.get_all_values()
 
-    # sh = google_sheet.get_worksheet(0)
-    # str_list = list(filter(None, sh.col_values(1)))
-    # index_first_empty_row = len(str_list) + 1
-    # print('index_first_empty_row',index_first_empty_row)
-    # if spreadsheet is empty, which mean first empty row's index = 1
-    # if index_first_empty_row == 1:  # logic here
-    #     # update data along with header
-    #     sh.update(values=[df.columns.values.tolist()] + df.values.tolist())
-    # else:
-    #     end_index = index_first_empty_row + df.shape[0] - 1
-    #     print('end_index', end_index)
-    #     # only insert new row
-    #     sh.update(range_name=f'A{index_first_empty_row}:D{end_index}', values=df.values.tolist())
+    # Nếu chưa có dữ liệu thì thêm mới
+    if not existing_data:
+        sh.update(values=[df.columns.values.tolist()] + df.values.tolist())
+        return
+    # Chuyển dữ liệu hiện tại thành data frame
+    existing_df = pd.DataFrame(existing_data[1:], columns=existing_data[0]) # Bỏ dòng header
+
+    # Chuyển dữ liệu thành string để so sánh
+    existing_df['DATETIME'] = existing_df['DATETIME'].astype('string')
+
+    # Lọc dữ liệu chưa có trong sheets
+    new_df = df[~df['DATETIME'].isin(existing_df['DATETIME'])]
+
+    if not new_df.empty:
+        index_first_empty_row = len(existing_data)+1 # Lấy vị trí dòng chưa có dữ liệu
+        end_index = index_first_empty_row+new_df.shape[0]-1 
+        sh.update( range_name=f'A{index_first_empty_row}:D{end_index}', values=new_df.values.tolist())
+        print(f"Đã thêm {len(new_df)} dòng dữ liệu mới.")
+    else:
+        print("Không có dữ liệu mới để thêm.")
 
 
 group_topic = ""
