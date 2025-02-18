@@ -135,6 +135,7 @@ def get_group_message(group_id, num_day=2, sorted=False, update=False):
     return df_data
 
 if __name__ == '__main__':
+    # run
     df = get_group_message(group_id=SKYPE_GROUP_ID, num_day=1, sorted=True, update=True)
     df2 = get_group_message(group_id=SKYPE_GROUP_ID2, num_day=1, sorted=True, update=True)
     df_qt = get_group_message(group_id=SYPE_GROUP_ID_QT, num_day=1, sorted=True, update=True)
