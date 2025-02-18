@@ -12,6 +12,10 @@ USERNAME = os.getenv("USERNAME")
 PASSWORD = os.getenv("PASSWORD")
 SKYPE_GROUP_ID = os.getenv("SKYPE_GROUP_ID")
 SKYPE_GROUP_ID2 = os.getenv("SKYPE_GROUP_ID2")
+SYKPE_GROUP_ID_QT = os.getenv("SYPE_GROUP_ID_QT")
+SKYPE_GROUP_ID_CMT = os.getenv("SKYPE_GROUP_ID_CMT")
+SKYPE_GROUP_ID_TASK = os.getenv("SKYPE_GROUP_ID_TASK")
+SKYPE_GROUP_ID_TAHK = os.getenv("SKYPE_GROUP_ID_TAHK")
 GOOGLE_SERVICE_ACCOUNT = os.getenv("GOOGLE_SERVICE_ACCOUNT")
 GOOGLE_SHEET_URL = os.getenv("GOOGLE_SHEET_URL")
 
@@ -44,7 +48,7 @@ def update_spreadsheet(df, sheet_name, spreadsheet_url=None):
     existing_data = sh.get_all_values()
 
     # Nếu chưa có dữ liệu thì thêm mới
-    if not existing_data:
+    if len(existing_data) <= 1:
         sh.update(values=[df.columns.values.tolist()] + df.values.tolist())
         return
     # Chuyển dữ liệu hiện tại thành data frame
@@ -83,7 +87,7 @@ def get_group_message(group_id, num_day=2, sorted=False, update=False):
 
     channel = sk.chats[group_id]
     group_topic = channel.topic
-    sheet_name = group_topic[:2]
+    sheet_name = group_topic[:8]
     print('Group topic: ', group_topic)
 
     date_temp = cur_date
@@ -133,5 +137,13 @@ def get_group_message(group_id, num_day=2, sorted=False, update=False):
 if __name__ == '__main__':
     df = get_group_message(group_id=SKYPE_GROUP_ID, num_day=1, sorted=True, update=True)
     df2 = get_group_message(group_id=SKYPE_GROUP_ID2, num_day=1, sorted=True, update=True)
+    df_qt = get_group_message(group_id=SYPE_GROUP_ID_QT, num_day=1, sorted=True, update=True)
+    df_cmt = get_group_message(group_id=SKYPE_GROUP_ID_CMT, num_day=1, sorted=True, update=True)
+    df_task = get_group_message(group_id=SKYPE_GROUP_ID_TASK, num_day=1, sorted=True, update=True)
+    df_tahk = get_group_message(group_id=SKYPE_GROUP_ID_TAHK, num_day=1, sorted=True, update=True)
+    df_qt
+    df_cmt
+    df_task
+    df_tahk
     df
     df2

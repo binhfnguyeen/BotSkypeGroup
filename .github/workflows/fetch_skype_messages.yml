@@ -36,6 +36,10 @@ jobs:
           PASSWORD: ${{ secrets.PASSWORD }}
           SKYPE_GROUP_ID: ${{ secrets.SKYPE_GROUP_ID }}
           SKYPE_GROUP_ID2: ${{ secrets.SKYPE_GROUP_ID2 }}
+          SKYPE_GROUP_ID_QT: ${{ secrets.SKYPE_GROUP_ID_QT }}
+          SKYPE_GROUP_ID_CMT: ${{ secrets.SKYPE_GROUP_ID_CMT }}
+          SKYPE_GROUP_ID_TASK: ${{ secrets.SKYPE_GROUP_ID_TASK }}
+          SKYPE_GROUP_ID_TAHK: ${{ secrets.SKYPE_GROUP_ID_TAHK }}
           GOOGLE_SHEET_URL: ${{ secrets.GOOGLE_SHEET_URL }}
           GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
         run: python main.py
