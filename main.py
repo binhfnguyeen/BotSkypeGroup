@@ -138,7 +138,7 @@ if __name__ == '__main__':
     # run
     df = get_group_message(group_id=SKYPE_GROUP_ID, num_day=1, sorted=True, update=True)
     df2 = get_group_message(group_id=SKYPE_GROUP_ID2, num_day=1, sorted=True, update=True)
-    df_qt = get_group_message(group_id=SYPE_GROUP_ID_QT, num_day=1, sorted=True, update=True)
+    df_qt = get_group_message(group_id=SKYPE_GROUP_ID_QT, num_day=1, sorted=True, update=True)
     df_cmt = get_group_message(group_id=SKYPE_GROUP_ID_CMT, num_day=1, sorted=True, update=True)
     df_task = get_group_message(group_id=SKYPE_GROUP_ID_TASK, num_day=1, sorted=True, update=True)
     df_tahk = get_group_message(group_id=SKYPE_GROUP_ID_TAHK, num_day=1, sorted=True, update=True)
